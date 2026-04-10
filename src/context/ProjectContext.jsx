@@ -1,14 +1,20 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect } from "react";
 
 export const ProjectContext = createContext();
 
+// Load from localStorage
 const initialState = {
   projects: JSON.parse(localStorage.getItem("projects")) || []
 };
+
+// Reducer
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_PROJECT":
-      return { ...state, projects: [...state.projects, action.payload] };
+      return {
+        ...state,
+        projects: [...state.projects, action.payload]
+      };
 
     case "UPDATE_PROJECT":
       return {
@@ -31,10 +37,14 @@ const reducer = (state, action) => {
   }
 };
 
+// Provider
 export const ProjectProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    projects: []
-  });
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Save to localStorage whenever projects change
+  useEffect(() => {
+    localStorage.setItem("projects", JSON.stringify(state.projects));
+  }, [state.projects]);
 
   return (
     <ProjectContext.Provider
