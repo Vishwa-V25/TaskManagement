@@ -12,20 +12,17 @@ export const useProjects = () => {
       tasks: []
     };
 
-    dispatch({
-      type: "ADD_PROJECT",
-      payload: newProject
-    });
-
-    return newProject.id; // 🔥 IMPORTANT
+    dispatch({ type: "ADD_PROJECT", payload: newProject });
+    return newProject.id;
   };
 
   const updateProject = (project) => {
-    dispatch({
-      type: "UPDATE_PROJECT",
-      payload: project
-    });
+    dispatch({ type: "UPDATE_PROJECT", payload: project });
   };
 
-  return { projects, addProject, updateProject };
+  const deleteProject = (id) => {
+    dispatch({ type: "DELETE_PROJECT", payload: id });
+  };
+
+  return { projects, addProject, updateProject, deleteProject };
 };

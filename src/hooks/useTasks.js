@@ -1,9 +1,9 @@
 import { useProjects } from "./useProjects";
 
-export const useTasks = project => {
+export const useTasks = (project) => {
   const { updateProject } = useProjects();
 
-  const addTask = title => {
+  const addTask = (title) => {
     updateProject({
       ...project,
       tasks: [
@@ -20,14 +20,21 @@ export const useTasks = project => {
     });
   };
 
-  const updateTask = updatedTask => {
+  const updateTask = (updatedTask) => {
     updateProject({
       ...project,
-      tasks: project.tasks.map(t =>
+      tasks: project.tasks.map((t) =>
         t.id === updatedTask.id ? updatedTask : t
       )
     });
   };
 
-  return { addTask, updateTask };
+  const deleteTask = (id) => {
+    updateProject({
+      ...project,
+      tasks: project.tasks.filter((t) => t.id !== id)
+    });
+  };
+
+  return { addTask, updateTask, deleteTask };
 };

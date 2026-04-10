@@ -5,21 +5,23 @@ import TaskBoard from "./components/TaskBoard";
 import Dashboard from "./components/Dashboard";
 
 export default function App() {
-  const { projects, addProject } = useProjects();
+  const { projects, addProject, deleteProject } = useProjects();
   const [activeProjectId, setActiveProjectId] = useState(null);
 
   useEffect(() => {
     if (!activeProjectId && projects.length > 0) {
       setActiveProjectId(projects[0].id);
     }
-  }, [projects, activeProjectId]);
+  }, [projects]);
 
   const handleAddProject = (name) => {
     const id = addProject(name);
     setActiveProjectId(id);
   };
 
-  const activeProject = projects.find(p => p.id === activeProjectId);
+  const activeProject = projects.find(
+    (p) => p.id === activeProjectId
+  );
 
   return (
     <div className="app">
@@ -28,13 +30,13 @@ export default function App() {
         activeProjectId={activeProjectId}
         onSelect={setActiveProjectId}
         onAdd={handleAddProject}
+        onDelete={deleteProject}  
       />
 
       <div className="workspace">
         {!activeProject && (
           <div className="empty-state">
             <h2>Select or create a project</h2>
-            <p>Your tasks, time tracking, and analytics will appear here.</p>
           </div>
         )}
 

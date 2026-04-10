@@ -1,16 +1,30 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer } from "react";
 
 export const ProjectContext = createContext();
 
+const initialState = {
+  projects: JSON.parse(localStorage.getItem("projects")) || []
+};
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_PROJECT":
-      return [...state, action.payload];
+      return { ...state, projects: [...state.projects, action.payload] };
 
     case "UPDATE_PROJECT":
-      return state.map(p =>
-        p.id === action.payload.id ? action.payload : p
-      );
+      return {
+        ...state,
+        projects: state.projects.map((p) =>
+          p.id === action.payload.id ? action.payload : p
+        )
+      };
+
+    case "DELETE_PROJECT":
+      return {
+        ...state,
+        projects: state.projects.filter(
+          (p) => p.id !== action.payload
+        )
+      };
 
     default:
       return state;
@@ -18,17 +32,14 @@ const reducer = (state, action) => {
 };
 
 export const ProjectProvider = ({ children }) => {
-  const [projects, dispatch] = useReducer(
-    reducer,
-    JSON.parse(localStorage.getItem("projects")) || []
-  );
-
-  useEffect(() => {
-    localStorage.setItem("projects", JSON.stringify(projects));
-  }, [projects]);
+  const [state, dispatch] = useReducer(reducer, {
+    projects: []
+  });
 
   return (
-    <ProjectContext.Provider value={{ projects, dispatch }}>
+    <ProjectContext.Provider
+      value={{ projects: state.projects, dispatch }}
+    >
       {children}
     </ProjectContext.Provider>
   );
